@@ -1,0 +1,128 @@
+-- Константа для направления "вперед" (вверх по оси Y)
+local UP = vmath.vector3(0, 1, 0)
+
+-- Функция для инициализации или сброса состояния самолета
+local function reset_airplane_state(self)
+	-- Параметры движения
+	self.speed = 300          -- Текущая скорость
+	self.min_speed = 300      -- Базовая скорость полета
+	self.max_speed = 500      -- Максимальная скорость при ускорении
+	self.acceleration = 100   -- Скорость набора скорости (пикселей/сек^2)
+	self.deceleration = 50    -- Скорость потери скорости (пикселей/сек^2)
+	self.rotation_speed = 200 -- Скорость поворота (градусов/сек)
+
+	-- Переменные состояния
+	self.input_direction = 0  -- Направление поворота (-1 вправо, 1 влево, 0 прямо)
+	self.is_alive = true      -- Жив ли самолет
+	self.is_boosting = false  -- Активно ли ускорение
+	self.can_use_boost = true -- Можно ли использовать ускорение (для перезарядки)
+	self.hp = 3               -- Здоровье самолета
+
+	-- Включаем обратно все компоненты, которые могли быть отключены
+	msg.post("#player", "enable")
+
+	-- Обновляем визуальные эффекты урона
+	msg.post(".", "update_damage_fx")
+end
+
+-- Функция, отвечающая за все движение и повороты
+local function update_movement(self, dt)
+	-- 1. Управление скоростью
+	if self.is_boosting then
+		-- Если ускоряемся, плавно увеличиваем скорость до максимума
+		self.speed = self.speed + self.acceleration * dt
+		self.speed = math.min(self.speed, self.max_speed)
+	else
+		-- Если не ускоряемся, плавно снижаем скорость до базовой
+		self.speed = self.speed - self.deceleration * dt
+		self.speed = math.max(self.speed, self.min_speed)
+	end
+
+	-- 2. Поворот самолета
+	local current_rotation = go.get_rotation()
+	if self.input_direction ~= 0 then
+		local rotation_amount = math.rad(self.rotation_speed * self.input_direction * dt)
+		local delta_rotation = vmath.quat_rotation_z(rotation_amount)
+		go.set_rotation(current_rotation * delta_rotation)
+	end
+
+	-- 3. Движение вперед
+	local position = go.get_position()
+	local direction = vmath.rotate(go.get_rotation(), UP)
+	position = position + direction * self.speed * dt
+	go.set_position(position)
+end
+
+
+function init(self)
+	-- Получаем фокус ввода, чтобы объект слушал нажатия клавиш
+	msg.post(".", "acquire_input_focus")
+	-- Устанавливаем начальное состояние самолета
+	reset_airplane_state(self)
+end
+
+function update(self, dt)
+	if self.is_alive then
+		update_movement(self, dt)
+	end
+end
+
+function on_message(self, message_id, message)
+	-- Перезапуск/Сброс состояния
+	if message_id == hash("restart") then
+		reset_airplane_state(self)
+
+		-- Получение урона (пример)
+	elseif message_id == hash("take_damage") then
+		if not self.is_alive then return end
+
+		self.hp = self.hp - 1
+		msg.post(".", "update_damage_fx") -- Отправляем сообщение себе, чтобы обновить эффекты
+
+		if self.hp <= 0 then
+			msg.post(".", "dead") -- Если здоровье кончилось, умираем
+		end
+
+		-- Активация ускорения
+	elseif message_id == hash("start_boost") then
+		if not self.is_alive or not self.can_use_boost then return end
+
+		self.is_boosting = true
+		self.can_use_boost = false
+		--msg.post("game:/go#game", "speed_btn", { value = false }) -- Отключаем кнопку в интерфейсе
+
+		-- Через 10 секунд выключаем ускорение
+		timer.delay(10, false, function()
+			self.is_boosting = false
+		end)
+
+		-- Через 20 секунд разрешаем снова использовать ускорение (перезарядка)
+		timer.delay(20, false, function()
+			self.can_use_boost = true
+			--msg.post("game:/go#game", "speed_btn", { value = true }) -- Включаем кнопку обратно
+		end)
+	end
+end
+function on_input(self, action_id, action)
+	if not self.is_alive then return end
+
+	-- Управление поворотом
+	if action_id == hash("left") then
+		if action.pressed then
+			self.input_direction = 1
+		elseif action.released and self.input_direction == 1 then
+			-- Сбрасываем поворот, только если была отпущена именно эта клавиша
+			self.input_direction = 0
+		end
+	elseif action_id == hash("right") then
+		if action.pressed then
+			self.input_direction = -1
+		elseif action.released and self.input_direction == -1 then
+			self.input_direction = 0
+		end
+
+		-- Управление ускорением
+	elseif action_id == hash("space") and action.pressed then
+		msg.post(".", "start_boost")
+	end
+end

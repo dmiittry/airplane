@@ -1,0 +1,5 @@
+local clouds_sprite = {"clouds1","clouds2","clouds3","clouds4","clouds5","clouds6","clouds7","clouds8","clouds9","clouds10","clouds11","clouds12","clouds13","clouds14","clouds15","clouds16","clouds17"}
+
+function init(self)
+	sprite.play_flipbook("#clouds", clouds_sprite[math.random(1,17)])
+end

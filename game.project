@@ -1,0 +1,33 @@
+[bootstrap]
+main_collection = /main/main.collectionc
+
+[script]
+shared_state = 1
+
+[display]
+width = 1920
+height = 1080
+high_dpi = 1
+
+[android]
+input_method = HiddenInputField
+
+[html5]
+scale_mode = stretch
+wasm_streaming = 1
+show_fullscreen_button = 0
+show_made_with_defold = 0
+
+[project]
+title = airplane-poki
+dependencies#0 = https://github.com/defold/extension-poki-sdk/archive/refs/heads/main.zip
+
+[factory]
+max_count = 99999
+
+[sprite]
+max_count = 99999
+
+[collection]
+max_instances = 9999
+

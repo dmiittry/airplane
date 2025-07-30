@@ -1,0 +1,62 @@
+images {
+  image: "/assets/clouds/clouds1.png"
+}
+images {
+  image: "/assets/ux/sky.png"
+}
+images {
+  image: "/assets/clouds/clouds2.png"
+}
+images {
+  image: "/assets/clouds/clouds3.png"
+}
+images {
+  image: "/assets/clouds/clouds4.png"
+}
+images {
+  image: "/assets/clouds/clouds5.png"
+}
+images {
+  image: "/assets/clouds/clouds6.png"
+}
+images {
+  image: "/assets/clouds/clouds7.png"
+}
+images {
+  image: "/assets/clouds/clouds8.png"
+}
+images {
+  image: "/assets/clouds/clouds9.png"
+}
+images {
+  image: "/assets/clouds/clouds10.png"
+}
+images {
+  image: "/assets/clouds/clouds11.png"
+}
+images {
+  image: "/assets/clouds/clouds12.png"
+}
+images {
+  image: "/assets/clouds/clouds13.png"
+}
+images {
+  image: "/assets/clouds/clouds14.png"
+}
+images {
+  image: "/assets/clouds/clouds15.png"
+}
+images {
+  image: "/assets/clouds/clouds16.png"
+}
+images {
+  image: "/assets/clouds/clouds17.png"
+}
+animations {
+  id: "orange-airplane-idle"
+  images {
+    image: "/assets/airplane/orange-airplane.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+}
+extrude_borders: 2

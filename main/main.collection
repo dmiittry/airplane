@@ -1,0 +1,20 @@
+name: "main"
+instances {
+  id: "camera"
+  prototype: "/go/camera.go"
+  position {
+    z: 934.0
+  }
+}
+instances {
+  id: "clouds_spawn"
+  prototype: "/go/clouds_spawn.go"
+}
+instances {
+  id: "player"
+  prototype: "/go/player.go"
+  position {
+    z: 31.0
+  }
+}
+scale_along_z: 0

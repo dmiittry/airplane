@@ -1,0 +1,11 @@
+-- camera.script
+
+function update(self, dt)
+	-- Получаем текущую позицию игрока
+	local player_pos = go.get_position("/player")
+
+	-- Устанавливаем позицию камеры такой же, как у игрока
+	-- Мы не меняем Z-координату, чтобы камера оставалась на своей высоте
+	local current_pos = go.get_position()
+	go.set_position(vmath.vector3(player_pos.x, player_pos.y, current_pos.z))
+end

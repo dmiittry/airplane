@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Poki Game Template
 
 Template project for HTML5 games on [Poki](https://poki.com/). This project is configured specifically for HTML5 games released on Poki. The project has the latest version of Poki SDK added as a *game.project* dependency.
@@ -16,3 +17,7 @@ Head over to the [Defold Poki SDK documentation](https://defold.com/extension-po
 ## Defold for HTML5
 
 Learn more about HTML5 game development using Defold in the [official Defold documentation](https://defold.com/manuals/html5/). Pay extra attention to the [section on how to optimize your Defold game for HTML5](https://defold.com/manuals/html5/#optimizations)
+=======
+# airplane
+web game for poki and yandex game
+>>>>>>> a591d104337e9c93457181e7ebc2da14d0823360
